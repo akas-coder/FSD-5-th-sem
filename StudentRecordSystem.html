@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Marks System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0,123,255,0.2);
+        }
+
+        button {
+            margin: 6px 0;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            background: #95b3d2;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            min-height: 50px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        h3 {
+            color: #444;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Marks System</h2>
+        
+        <!-- Form to add student -->
+        <input type="text" id="studentName" placeholder="Enter Student Name">
+        <input type="number" id="studentMarks" placeholder="Enter Marks">
+        <button onclick="addStudent()">Add Student</button>
+        
+        <!-- Buttons for actions -->
+        <div class="btn-group">
+            <button onclick="showAll()">Show All</button>
+            <button onclick="showNames()">Show Names</button> 
+            <button onclick="showPassed()">Show Passed</button> 
+            <button onclick="calculateAverage()">Average</button> 
+            <button onclick="findTopper()">Topper</button> 
+        </div>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        let students = [];
+
+        function addStudent() {
+            let name = document.getElementById("studentName").value;
+            let marks = parseInt(document.getElementById("studentMarks").value);
+
+            if(name && !isNaN(marks)) {
+                students.push({name: name, marks: marks});
+                alert("Student added successfully!");
+                document.getElementById("studentName").value = "";
+                document.getElementById("studentMarks").value = "";
+            } else {
+                alert("Please enter valid name and marks!");
+            }
+        }
+
+        function showAll() {
+            let output = "<h3>All Students</h3>";
+            if(students.length === 0) {
+                output += "No students added yet.";
+            } else {
+                students.forEach(s => {
+                    output += `${s.name} - ${s.marks} <br>`;
+                });
+            }
+            document.getElementById("result").innerHTML = output;
+        }
+
+        // Using map()
+        function showNames() {
+            if(students.length === 0) {
+                document.getElementById("result").innerHTML = "No students added.";
+                return;
+            }
+
+            let names = students.map(s => s.name);
+            document.getElementById("result").innerHTML = `<h3>Student Names</h3> ${names.join(", ")}`;
+        }
+
+        // Using filter()
+        function showPassed() {
+            let output = "<h3>Passed Students (>=40)</h3>";
+            let passed = students.filter(s => s.marks >= 40);
+
+            if(passed.length === 0) {
+                output += "No students passed.";
+            } else {
+                passed.forEach(s => {
+                    output += `${s.name} - ${s.marks} <br>`;
+                });
+            }
+            document.getElementById("result").innerHTML = output;
+        }
+
+        // Using reduce()
+        function calculateAverage() {
+            if(students.length === 0) {
+                document.getElementById("result").innerHTML = "No students to calculate average.";
+                return;
+            }
+
+            let total = students.reduce((sum, s) => sum + s.marks, 0);
+            let avg = (total / students.length).toFixed(2);
+
+            document.getElementById("result").innerHTML = `<h3>Average Marks</h3> ${avg}`;
+        }
+
+        // Using reduce()
+        function findTopper() {
+            if(students.length === 0) {
+                document.getElementById("result").innerHTML = "No students to find topper.";
+                return;
+            }
+
+            let topper = students.reduce((max, s) => s.marks > max.marks ? s : max);
+            document.getElementById("result").innerHTML = `<h3>Topper</h3> ${topper.name} - ${topper.marks}`;
+        }
+    </script>
+</body>
+</html>
